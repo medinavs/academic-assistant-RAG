@@ -1,0 +1,31 @@
+org: medinaorg
+app: medinaorg
+service: semantic-search-api
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  httpApi:
+    name: semantic-search-api
+    cors: true
+    payload: "2.0"
+  tags:
+    System: semantic-search-api
+    App: medinaorg
+
+functions:
+  api:
+    name: "semantic-search-api"
+    handler: src/server.main
+    timeout: 29
+    tags:
+      Function: semantic-search-api
+    events:
+      - httpApi: "*"
