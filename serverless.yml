@@ -3,7 +3,6 @@ app: medinaorg
 service: semantic-search-api
 
 plugins:
-  - serverless-esbuild
   - serverless-offline
 
 package:
