@@ -1,6 +1,7 @@
 import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone as PineconeClient } from "@pinecone-database/pinecone";
 import { OpenAIEmbeddings } from "@langchain/openai";
+import { env } from "../../env";
 
 export class PineconeProvider {
     private static clientInstance: PineconeClient | null = null;
@@ -9,7 +10,7 @@ export class PineconeProvider {
     public static getClient(): PineconeClient {
         if (!PineconeProvider.clientInstance) {
             PineconeProvider.clientInstance = new PineconeClient({
-                apiKey: process.env.PINECONE_API_KEY!,
+                apiKey: env.PINECONE_API_KEY!,
             });
         }
 
@@ -22,7 +23,7 @@ export class PineconeProvider {
             const pineconeIndex = client.index(indexName);
 
             const embeddings = new OpenAIEmbeddings({
-                openAIApiKey: process.env.OPENAI_API_KEY!,
+                openAIApiKey: env.OPENAI_API_KEY!,
             });
 
             PineconeProvider.storeInstance = new PineconeStore(embeddings, {
@@ -39,7 +40,7 @@ export class PineconeProvider {
         const pineconeIndex = client.index(indexName);
 
         const embeddingsInstance = embeddings || new OpenAIEmbeddings({
-            openAIApiKey: process.env.OPENAI_API_KEY!,
+            openAIApiKey: env.OPENAI_API_KEY!,
         });
 
         return new PineconeStore(embeddingsInstance, {

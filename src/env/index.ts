@@ -3,6 +3,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
     OPENAI_API_KEY: z.string().min(1, "OPEN_AI_API_KEY is required"),
+    PINECONE_API_KEY: z.string().min(1, "PINECONE_API_KEY is required"),
 })
 
 const _env = envSchema.safeParse(process.env);
