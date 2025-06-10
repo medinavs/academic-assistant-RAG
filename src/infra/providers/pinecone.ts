@@ -1,7 +1,7 @@
 import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone as PineconeClient } from "@pinecone-database/pinecone";
 import { OpenAIEmbeddings } from "@langchain/openai";
-import { env } from "../../env";
+import { env } from "../../env/index.ts";
 
 export class PineconeProvider {
     private static clientInstance: PineconeClient | null = null;

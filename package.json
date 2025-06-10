@@ -2,6 +2,7 @@
   "name": "semantic-search-rag",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "offline:dev": "serverless offline start --reloadHandler --noAuth --aws-profile medina --httpPort 4001"
   },
@@ -30,7 +31,7 @@
   },
   "devDependencies": {
     "@rocketseat/eslint-config": "^2.2.2",
-    "@types/node": "^22.15.30",
+    "@types/node": "^22.15.31",
     "eslint": "^8.57.1"
   }
 }
