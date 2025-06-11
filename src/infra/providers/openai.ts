@@ -1,17 +1,23 @@
-import { openai as openaiModel } from '@ai-sdk/openai'
+import { ChatOpenAI } from "@langchain/openai";
 
 export class OpenAIProvider {
-    private static instance: ReturnType<typeof openaiModel> | null = null;
+    private static instance: ChatOpenAI;
 
-    public static getInstance(): ReturnType<typeof openaiModel> {
+    private constructor() { }
+
+    static getInstance(): ChatOpenAI {
         if (!OpenAIProvider.instance) {
-            OpenAIProvider.instance = openaiModel('gpt-4o')
+            OpenAIProvider.instance = new ChatOpenAI({
+                model: "gpt-4o-mini",
+                openAIApiKey: process.env.OPENAI_API_KEY,
+                temperature: 0.3,
+            });
         }
 
-        return OpenAIProvider.instance
+        return OpenAIProvider.instance;
     }
 
-    public static createModel(modelName: string = 'gpt-4o'): ReturnType<typeof openaiModel> {
-        return openaiModel(modelName)
+    static resetInstance(): void {
+        OpenAIProvider.instance = null as any;
     }
 }

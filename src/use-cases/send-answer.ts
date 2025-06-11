@@ -1,6 +1,8 @@
-import { generateText } from "ai";
-import type { openai as openaiModel } from '@ai-sdk/openai';
-
+import { ChatOpenAI } from "@langchain/openai";
+import { PineconeStore } from "@langchain/pinecone";
+import { PromptTemplate } from "@langchain/core/prompts";
+import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
+import { createRetrievalChain } from "langchain/chains/retrieval";
 
 interface SendAnswerUseCaseRequest {
     message: string;
@@ -11,20 +13,47 @@ interface SendAnswerUseCaseResponse {
 
 export class SendAnswerUseCase {
     constructor(
-        private readonly openai: ReturnType<typeof openaiModel>
+        private readonly model: ChatOpenAI,
+        private readonly pineconeVectorStore: PineconeStore,
     ) { }
 
     async execute({
         message
     }: SendAnswerUseCaseRequest): Promise<SendAnswerUseCaseResponse> {
-        const answer = await generateText({
-            model: this.openai,
-            prompt: message,
-            system: "you only answer 'i dont know'"
+
+        if (!message) {
+            throw new Error("Message is required");
+        }
+
+        const prompt = new PromptTemplate({
+            template: `
+                Você é um assistente de professores e alunos, que ajuda a responder perguntas sobre o conteúdo das disciplinas da escola.
+                Você deve responder de forma clara e objetiva, sem rodeios, e sempre com base no conteúdo da aula.
+                Se a resposta não estiver no conteúdo responda que não sabe, não invente respostas.
+                
+                conteúdo: {context}
+
+                Pergunta: {message}
+            `.trim(),
+            inputVariables: ["context", "message"],
+        })
+
+        const documentChain = await createStuffDocumentsChain({
+            llm: this.model,
+            prompt,
+        });
+
+        const retrievalChain = await createRetrievalChain({
+            combineDocsChain: documentChain,
+            retriever: this.pineconeVectorStore.asRetriever(),
+        });
+
+        const result = await retrievalChain.invoke({
+            input: message,
         });
 
         return {
-            answer: answer.text,
+            answer: result.answer,
         }
     }
 }

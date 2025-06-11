@@ -22,9 +22,15 @@ export class PineconeProvider {
             const client = PineconeProvider.getClient();
             const pineconeIndex = client.index(indexName);
 
+            // OpenAI embeddings - default
             const embeddings = new OpenAIEmbeddings({
                 openAIApiKey: env.OPENAI_API_KEY!,
             });
+
+            // if local
+            // const embeddings = new HuggingFaceTransformersEmbeddings({
+            //     model: "intfloat/e5-large-v2"
+            // });
 
             PineconeProvider.storeInstance = new PineconeStore(embeddings, {
                 pineconeIndex,
