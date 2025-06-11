@@ -6,6 +6,7 @@ import {
 } from 'fastify-type-provider-zod';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
+import { routes } from './http/controllers/routes';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -15,6 +16,8 @@ app.setSerializerCompiler(serializerCompiler);
 app.addHook('preHandler', async (request, reply) => {
     console.log(`${request.method} ${request.url} - ${new Date().toISOString()}`);
 });
+
+app.register(routes)
 
 // @TODO make a middleware to auth requests
 

@@ -1,36 +1,24 @@
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
+import { z } from "zod";
 import { makeAnswerUseCase } from "../../../use-cases/factories/make-send-answer-use-case";
 
 export async function Answer(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post('/message', {
         schema: {
-            body: {
-                type: 'object',
-                properties: {
-                    message: {
-                        type: 'string',
-                        description: 'The message to send',
-                    }
-                },
-                required: ['message']
-            },
+            body: z.object({
+                message: z.string().describe('The message to send'),
+            }),
             response: {
-                200: {
-                    type: 'object',
-                    properties: {
-                        answer: {
-                            type: 'string',
-                            description: 'The answer to the message',
-                        },
-                    },
-                }
+                200: z.object({
+                    answer: z.string().describe('The answer to the message'),
+                }),
             }
         }
     }, async (request, reply) => {
         const { message } = request.body as { message: string };
 
-        const sendAnswerUseCase = makeAnswerUseCase();
+        const sendAnswerUseCase = await makeAnswerUseCase();
 
         const response = await sendAnswerUseCase.execute({
             message,

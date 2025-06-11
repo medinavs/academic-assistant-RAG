@@ -9,6 +9,7 @@ interface SendAnswerUseCaseRequest {
 }
 
 interface SendAnswerUseCaseResponse {
+    answer: string;
 }
 
 export class SendAnswerUseCase {
@@ -33,9 +34,9 @@ export class SendAnswerUseCase {
                 
                 conteúdo: {context}
 
-                Pergunta: {message}
+                Pergunta: {input}
             `.trim(),
-            inputVariables: ["context", "message"],
+            inputVariables: ["context", "input"],
         })
 
         const documentChain = await createStuffDocumentsChain({
