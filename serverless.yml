@@ -3,12 +3,10 @@ app: medinaorg
 service: semantic-search-api
 
 plugins:
-  - serverless-esbuild
   - serverless-offline
 
 package:
   individually: true
-  excludeDevDependencies: true
 
 provider:
   name: aws
@@ -27,6 +25,7 @@ functions:
     name: "semantic-search-api"
     handler: src/server.main
     timeout: 29
+    environment: ${file(./envs/prod.env.json)}
     tags:
       Function: semantic-search-api
     events:
