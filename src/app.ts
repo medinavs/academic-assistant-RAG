@@ -7,11 +7,18 @@ import {
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import { routes } from './http/controllers/routes';
+import cors from '@fastify/cors';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>();
 
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
+
+app.register(cors, {
+    origin: true,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+});
 
 app.addHook('preHandler', async (request, reply) => {
     console.log(`${request.method} ${request.url} - ${new Date().toISOString()}`);
