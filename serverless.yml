@@ -3,14 +3,17 @@ app: medinaorg
 service: semantic-search-api
 
 plugins:
+  - serverless-esbuild
   - serverless-offline
 
 package:
   individually: true
+  excludeDevDependencies: true
 
 provider:
   name: aws
   runtime: nodejs20.x
+  memorySize: 256
   httpApi:
     name: semantic-search-api
     cors: true
