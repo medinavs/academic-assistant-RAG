@@ -25,8 +25,8 @@ export class PineconeProvider {
             // OpenAI embeddings - default
             const embeddings = new OpenAIEmbeddings({
                 openAIApiKey: env.OPENAI_API_KEY!,
-                model: "text-embedding-3-small",
-                dimensions: 1024,
+                model: "text-embedding-3-large",
+                dimensions: 3072,
             });
 
             // if local

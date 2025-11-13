@@ -6,6 +6,10 @@ import { PineconeProvider } from "../providers/pinecone.ts";
 import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { TextLoader } from "langchain/document_loaders/fs/text";
+import { DocxLoader } from "@langchain/community/document_loaders/fs/docx";
+import { PPTXLoader } from "@langchain/community/document_loaders/fs/pptx";
+import { CSVLoader } from "@langchain/community/document_loaders/fs/csv"
+
 
 export class DocumentLoader {
     protected splitter = new TokenTextSplitter({
@@ -24,6 +28,9 @@ export class DocumentLoader {
             {
                 ".pdf": (filePath) => new PDFLoader(filePath),
                 ".txt": (filePath) => new TextLoader(filePath),
+                ".docx": (filePath) => new DocxLoader(filePath),
+                ".pptx": (filePath) => new PPTXLoader(filePath),
+                ".csv": (filePath) => new CSVLoader(filePath, {separator: ";"}),
             }
         );
 
